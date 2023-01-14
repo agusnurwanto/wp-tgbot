@@ -13,7 +13,7 @@
  * @package           Wp_Tgbot
  *
  * @wordpress-plugin
- * Plugin Name:       WP Telegram Bakti Negara
+ * Plugin Name:       WP TGBOT Bakti Negara
  * Plugin URI:        https://https://github.com/agusnurwanto/wp-tgbot
  * Description:       Plugin untuk API telegram bot
  * Version:           1.0.0
@@ -36,6 +36,32 @@ if ( ! defined( 'WPINC' ) ) {
  * Rename this for your plugin and update it as you release new versions.
  */
 define( 'WP_TGBOT_VERSION', '1.0.0' );
+define( 'TGBOT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'TGBOT_PLUGIN_PATH', plugin_dir_path(__FILE__) );
+define( 'TGBOT_APIKEY', '_crb_apikey_tgbot' );
+
+// ============== https://carbonfields.net/ ================
+if(!defined('Carbon_Fields_Plugin\PLUGIN_FILE')){
+    define( 'Carbon_Fields_Plugin\PLUGIN_FILE', __FILE__ );
+
+    define( 'Carbon_Fields_Plugin\RELATIVE_PLUGIN_FILE', basename( dirname( \Carbon_Fields_Plugin\PLUGIN_FILE ) ) . '/' . basename( \Carbon_Fields_Plugin\PLUGIN_FILE ) );
+}
+
+add_action( 'after_setup_theme', 'carbon_fields_boot_plugin' );
+if(!function_exists('carbon_fields_boot_plugin')){
+    function carbon_fields_boot_plugin() {
+        if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+            require( __DIR__ . '/vendor/autoload.php' );
+        }
+        \Carbon_Fields\Carbon_Fields::boot();
+
+        if ( is_admin() ) {
+            \Carbon_Fields_Plugin\Libraries\Plugin_Update_Warning\Plugin_Update_Warning::boot();
+        }
+    }
+}
+// copy folder vendor & core
+// ============== https://carbonfields.net/ ================
 
 /**
  * The code that runs during plugin activation.
