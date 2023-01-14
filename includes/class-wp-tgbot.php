@@ -124,6 +124,13 @@ class Wp_Tgbot {
 
 		$this->loader = new Wp_Tgbot_Loader();
 
+		// Functions tambahan
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-tgbot-functions.php';
+
+		$this->functions = new TGBOT_Functions( $this->plugin_name, $this->version );
+
+		$this->loader->add_action('template_redirect', $this->functions, 'allow_access_private_post', 0);
+
 	}
 
 	/**
@@ -152,10 +159,12 @@ class Wp_Tgbot {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Wp_Tgbot_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new Wp_Tgbot_Admin( $this->get_plugin_name(), $this->get_version(), $this->functions );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+
+		$this->loader->add_action('carbon_fields_register_fields', $plugin_admin, 'crb_attach_tgbot_options');
 
 	}
 
@@ -168,7 +177,7 @@ class Wp_Tgbot {
 	 */
 	private function define_public_hooks() {
 
-		$plugin_public = new Wp_Tgbot_Public( $this->get_plugin_name(), $this->get_version() );
+		$plugin_public = new Wp_Tgbot_Public( $this->get_plugin_name(), $this->get_version(), $this->functions );
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );

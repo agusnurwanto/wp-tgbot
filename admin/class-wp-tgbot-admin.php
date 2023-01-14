@@ -20,6 +20,9 @@
  * @subpackage Wp_Tgbot/admin
  * @author     Agus Nurwanto <agusnurwantomuslim@gmail.com>
  */
+use Carbon_Fields\Container;
+use Carbon_Fields\Field;
+
 class Wp_Tgbot_Admin {
 
 	/**
@@ -47,10 +50,11 @@ class Wp_Tgbot_Admin {
 	 * @param      string    $plugin_name       The name of this plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version ) {
+	public function __construct( $plugin_name, $version, $functions ) {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+		$this->functions = $functions;
 
 	}
 
@@ -98,6 +102,23 @@ class Wp_Tgbot_Admin {
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-tgbot-admin.js', array( 'jquery' ), $this->version, false );
 
+	}
+
+	function crb_attach_tgbot_options(){
+		$basic_options_container = Container::make( 'theme_options', __( 'TGBOT Options' ) )
+			->set_page_menu_position( 4 )
+	        ->add_fields( array(
+				Field::make( 'html', 'crb_tgbot_halaman_terkait' )
+		        	->set_html( '
+					<h5>HALAMAN TERKAIT</h5>
+	            	<ol>
+	            		<li>Video tutorial bisa dicek di ...</li>
+	            	</ol>
+		        	' ),
+	            Field::make( 'text', 'crb_apikey_tgbot', 'API KEY' )
+	            	->set_default_value($this->functions->generateRandomString())
+	            	->set_help_text('Wajib diisi. API KEY digunakan untuk integrasi data.')
+	        ) );
 	}
 
 }
