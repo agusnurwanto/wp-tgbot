@@ -348,12 +348,16 @@ class TGBOT_Functions
 	  	$bot_tg = $options['token'];
 	  	$id_akun_tg = $options['tg_id'];
 	  	$parse_mode = $options['parse_mode'];
+	  	$topik_id = '';
+	  	if(!empty($options['topic_id'])){
+	  		$topik_id = '&reply_to_message_id='.$options['topic_id'];
+	  	}
 	  	$ret = array();
 	  	if(!empty($bot_tg) && !empty($id_akun_tg)){
 	  		$message = urlencode($options['message']);
 	  		$id_akun_tg = explode(',', $id_akun_tg);
 	  		foreach($id_akun_tg as $id_akun){
-	  			$url = "https://api.telegram.org/bot$bot_tg/sendMessage?parse_mode=$parse_mode&chat_id=$id_akun&text=$message";
+	  			$url = "https://api.telegram.org/bot$bot_tg/sendMessage?parse_mode=$parse_mode&chat_id=$id_akun&text=$message".$topik_id;
 	  			$ret_url = file_get_contents($url);
 	  			if(true == $login){
 	  				$ret[] = array(

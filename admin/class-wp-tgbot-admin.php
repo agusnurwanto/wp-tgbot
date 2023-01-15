@@ -130,14 +130,18 @@ class Wp_Tgbot_Admin {
 				    ->add_fields( array(
 				        Field::make( 'text', 'tgbot_id', __( 'ID nama koneksi' ) )
             				->set_default_value('koneksi1')
-            				->set_help_text('ID koneksi ini dipakai untuk keperluan API'),
+            				->set_help_text('ID koneksi ini dipakai untuk keperluan API')
+            				->set_required( true ),
 				        Field::make( 'radio', 'tg_mode', __( 'Parse mode' ) )
 			            	->add_options( array(
 						        'HTML' => __( 'HTML' ),
 						        'Markdown' => __( 'Markdown' )
 						    ) )
             				->set_default_value('1'),
-				        Field::make( 'text', 'tg_id', __( 'Chanel ID / Akun ID' ) ),
+				        Field::make( 'text', 'tg_id', __( 'Chanel ID / Akun ID' ) )
+            				->set_required( true ),
+				        Field::make( 'text', 'tg_chat_id', __( 'Topik ID' ) )
+				        	->set_help_text('ID topik atau message ID'),
 				        Field::make( 'textarea', 'tg_message', __( 'Format Pesan' ) )
 	            			->set_default_value("[link_github]\n[commit]\n[username]\n[time]\n[link_commit]\n[modified]")
 				        	->set_help_text('
@@ -150,6 +154,7 @@ class Wp_Tgbot_Admin {
 				        			<li>[modified] file yang diubah.</li>
 				        			<li>Telegram Bot API currently supports only &lt;b&gt;, &lt;i&gt;, &lt;a&gt;,&lt;code&gt; and &lt;pre&gt; tags, for HTML parse mode</li>
 				        		</ul>')
+            				->set_required( true )
 				    ) )
 	        ) );
 	}

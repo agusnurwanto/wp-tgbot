@@ -129,6 +129,7 @@ class Wp_Tgbot_Public {
 								$options = array(
 									'token' => get_option('_crb_tgbot_token'),
 									'tg_id' => $v['tg_id'],
+									'topic_id' => $v['tg_chat_id'],
 									'parse_mode' => $v['tg_mode'],
 									'message' => $message
 								);
