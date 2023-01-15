@@ -244,7 +244,7 @@ class TGBOT_Functions
 	    }
 	}
 
-	function get_option_complex($key, $type){
+	function get_option_complex($key, $type=0){
 		global $wpdb;
         $ret = $wpdb->get_results('select option_name, option_value from '.$wpdb->prefix.'options where option_name like \''.$key.'|%\'', ARRAY_A);
         $res = array();
@@ -345,14 +345,15 @@ class TGBOT_Functions
 		        $login = true;
 		    }
 		}
-	  	$bot_tg = get_option('_crb_tgbot_bot_tg');
-	  	$id_akun_tg = get_option('_crb_tgbot_akun_tg');
+	  	$bot_tg = $options['token'];
+	  	$id_akun_tg = $options['tg_id'];
+	  	$parse_mode = $options['parse_mode'];
 	  	$ret = array();
 	  	if(!empty($bot_tg) && !empty($id_akun_tg)){
-	  		$message = $options['message'];
+	  		$message = urlencode($options['message']);
 	  		$id_akun_tg = explode(',', $id_akun_tg);
 	  		foreach($id_akun_tg as $id_akun){
-	  			$url = "https://api.telegram.org/$bot_tg/sendMessage?chat_id=$id_akun&text=$message";
+	  			$url = "https://api.telegram.org/bot$bot_tg/sendMessage?parse_mode=$parse_mode&chat_id=$id_akun&text=$message";
 	  			$ret_url = file_get_contents($url);
 	  			if(true == $login){
 	  				$ret[] = array(

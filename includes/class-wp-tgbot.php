@@ -181,6 +181,8 @@ class Wp_Tgbot {
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+		$this->loader->add_action('wp_ajax_send_tgbot', $plugin_public, 'send_tgbot');
+		$this->loader->add_action('wp_ajax_nopriv_send_tgbot', $plugin_public, 'send_tgbot');
 
 	}
 

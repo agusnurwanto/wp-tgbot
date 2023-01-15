@@ -116,6 +116,7 @@ class Wp_Tgbot_Admin {
 	            		<li>Buat Bot dengan mengirimkan teks <b>/newbot</b> ke akun <b>@BotFather</b>.</li>
 						<li>Setelah selesai, akun <b>@BotFather</b> akan memberikan anda Token Bot.</li>
 						<li>Copy token dan paste pada kolom Bot Token.</li>
+						<li>Endpoint API untuk GITHUB: <b>'.site_url().'/wp-admin/admin-ajax.php?action=send_tgbot&api_key='.get_option('_crb_apikey_tgbot').'&id_koneksi=[ID nama koneksi]</b></li>
 	            	</ol>
 		        	' ),
 	            Field::make( 'text', 'crb_apikey_tgbot', 'API KEY' )
@@ -125,36 +126,31 @@ class Wp_Tgbot_Admin {
 	            Field::make( 'text', 'crb_tgbot_token', 'Token Bot' )
 	            	->set_help_text('Wajib diisi. Token Bot Telegram yang sudah dibuat.')
             		->set_required( true ),
-		        Field::make( 'text', 'crb_github_url', __( 'Endpoint API for GITHUB' ) )
-		        	->set_default_value(site_url().'/wp-admin/admin-ajax.php?action=send_tgbot&api_key='.get_option('_crb_apikey_tgbot').'&tg_id=[channel_id]')
-		        	->set_attribute('readOnly', 'true'),
 	            Field::make( 'complex', 'crb_tgbot_api', __( 'Telegram API' ) )
 				    ->add_fields( array(
+				        Field::make( 'text', 'tgbot_id', __( 'ID nama koneksi' ) )
+            				->set_default_value('koneksi1')
+            				->set_help_text('ID koneksi ini dipakai untuk keperluan API'),
 				        Field::make( 'radio', 'tg_mode', __( 'Parse mode' ) )
 			            	->add_options( array(
-						        '1' => __( 'HTML' ),
-						        '2' => __( 'Markdown' )
+						        'HTML' => __( 'HTML' ),
+						        'Markdown' => __( 'Markdown' )
 						    ) )
             				->set_default_value('1'),
 				        Field::make( 'text', 'tg_id', __( 'Chanel ID / Akun ID' ) ),
 				        Field::make( 'textarea', 'tg_message', __( 'Format Pesan' ) )
-	            			->set_default_value('[link_github]\n[commit]\n[link_commit]\n[username]')
-				        	->set_help_text('[username] untuk menampilkan username github. [commit] pesan commit git. [link_commit] url commit repository. [link_github] url repository github.')
+	            			->set_default_value("[link_github]\n[commit]\n[username]\n[time]\n[link_commit]\n[modified]")
+				        	->set_help_text('
+				        		<ul>
+				        			<li>[username] untuk menampilkan username github.</li>
+				        			<li>[commit] pesan commit git.</li>
+				        			<li>[link_commit] url commit repository.</li>
+				        			<li>[link_github] url repository github.</li>
+				        			<li>[time] waktu commit.</li>
+				        			<li>[modified] file yang diubah.</li>
+				        			<li>Telegram Bot API currently supports only &lt;b&gt;, &lt;i&gt;, &lt;a&gt;,&lt;code&gt; and &lt;pre&gt; tags, for HTML parse mode</li>
+				        		</ul>')
 				    ) )
 	        ) );
-	}
-
-	function convert_links_for_parsing( $text ) {
-
-		$parse_mode = get_option( 'tg_mode' );
-
-		if ( 'Markdown' !== $parse_mode ) {
-			$text = preg_replace( '/\[([^\]]+?)\]\(([^\)]+?)\)/ui', '<a href="$2">$1</a>', $text );
-
-			if ( 'HTML' !== $parse_mode ) {
-				$text = wp_strip_all_tags( $text, false );
-			}
-		}
-		return $text;
 	}
 }
