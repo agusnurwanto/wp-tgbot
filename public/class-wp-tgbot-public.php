@@ -119,12 +119,23 @@ class Wp_Tgbot_Public {
 						foreach($data as $v){
 							if($v['tgbot_id'] == $_GET['id_koneksi']){
 								$message = $v['tg_message'];
-								$message = str_replace('[username]', '<b>User:</b> '.$pesan->head_commit->committer->name, $message);
-								$message = str_replace('[commit]', '<b>Pesan commit:</b> '.$pesan->head_commit->message, $message);
-								$message = str_replace('[link_commit]', '<b>Link commit:</b> '.$pesan->head_commit->url, $message);
-								$message = str_replace('[link_github]', '<b>Repository:</b> '.$pesan->repository->html_url, $message);
-								$message = str_replace('[time]', '<b>Waktu commit:</b> '.$pesan->head_commit->timestamp, $message);
-								$message = str_replace('[modified]', "<b>Modified:</b> \n".implode("\n", $pesan->head_commit->modified), $message);
+								// gitlab
+								if(empty($pesan->repository->html_url)){
+									$message = str_replace('[username]', '<b>User:</b> '.$pesan->commits[0]->author->name, $message);
+									$message = str_replace('[commit]', '<b>Pesan commit:</b> '.$pesan->commits[0]->message, $message);
+									$message = str_replace('[link_commit]', '<b>Link commit:</b> '.$pesan->commits[0]->url, $message);
+									$message = str_replace('[link_github]', '<b>Repository:</b> '.$pesan->repository->homepage, $message);
+									$message = str_replace('[time]', '<b>Waktu commit:</b> '.$pesan->commits[0]->timestamp, $message);
+									$message = str_replace('[modified]', "<b>Modified:</b> \n".implode("\n", $pesan->commits[0]->modified), $message);
+								// github
+								}else{
+									$message = str_replace('[username]', '<b>User:</b> '.$pesan->head_commit->committer->name, $message);
+									$message = str_replace('[commit]', '<b>Pesan commit:</b> '.$pesan->head_commit->message, $message);
+									$message = str_replace('[link_commit]', '<b>Link commit:</b> '.$pesan->head_commit->url, $message);
+									$message = str_replace('[link_github]', '<b>Repository:</b> '.$pesan->repository->html_url, $message);
+									$message = str_replace('[time]', '<b>Waktu commit:</b> '.$pesan->head_commit->timestamp, $message);
+									$message = str_replace('[modified]', "<b>Modified:</b> \n".implode("\n", $pesan->head_commit->modified), $message);
+								}
 								$message = $this->convert_links_for_parsing($message, $v['tg_mode']);
 								$options = array(
 									'token' => get_option('_crb_tgbot_token'),
